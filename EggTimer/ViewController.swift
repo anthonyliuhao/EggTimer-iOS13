@@ -16,23 +16,36 @@ class ViewController: UIViewController {
         "Hard": 12
     ]
     
+    var secondsRemaining = 0
+    var timer = Timer()
+    
+    @IBOutlet weak var topLabel: UILabel!
+    
     @IBAction func hardnessSelected(_ sender: UIButton) {
+        
+        // Kill any previous timers
+        timer.invalidate()
         
         // Force unwrap sender.currentTitle
         let hardness = sender.currentTitle!
         
-        switch hardness {
-        case "Soft":
-            print(eggTimes[hardness]!) // Force unwrap the optional integer
-        case "Medium":
-            print(eggTimes[hardness]!)
-        case "Hard":
-            print(eggTimes[hardness]!)
-        default:
-            print("Error")
-        }
+        // Get the seconds remaining
+        secondsRemaining = eggTimes[hardness]!
+        
+        // Set the timer
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(update), userInfo: nil, repeats: true)
     }
     
-
+    @objc func update() {
+        if secondsRemaining > 0 {
+            print(secondsRemaining)
+            topLabel.text = "Time remaining: \(secondsRemaining) seconds"
+            secondsRemaining -= 1
+        }
+        else {
+            timer.invalidate()
+            topLabel.text = "Done!"
+        }
+    }
 }
   
